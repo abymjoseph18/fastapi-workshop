@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-app = FastAPI()
+app = FastAPI(title="FastAPI workshop", description="Prepared for Fastapi Introduction")
 
 
 # Define a route using a decorator

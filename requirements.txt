@@ -4,3 +4,4 @@ starlette_graphene3
 graphql_explorer
 pyinstrument
 fastapi_graphql
+graphene_federation

@@ -1,7 +1,7 @@
-from graphene import ObjectType, String, Schema, List
+from graphene import ObjectType, String, Schema, List, Field, Argument
 
 
-class User(ObjectType):
+class UserType(ObjectType):
     # fields from user_data (or from DB)
     first_name = String(description="User's first name")
     last_name = String(description="User's last name")
@@ -29,12 +29,24 @@ user_data = [
 
 
 class Query(ObjectType):
-    users = List(User, description="List of users")
+    # Query 1: List all users
+    users_query = List(UserType, description="List of users")
 
-    def resolve_users(self, info):
+    # Resolver for query users
+    def resolve_users_query(self, info):
         # Convert the list of dictionaries to a list of User objects
-        users = [User(**user) for user in user_data]
+        users = [UserType(**user) for user in user_data]
         return users
+
+    # Query 1: List user with input email
+    user_query = Field(UserType, email=Argument(String, description="User's email"))
+
+    def resolve_user_query(self, info, email):
+        # Find and return the user with the specified email
+        for user in user_data:
+            if user["email"] == email:
+                return UserType(**user)
+        return None
 
 
 schema = Schema(query=Query)

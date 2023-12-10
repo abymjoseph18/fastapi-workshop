@@ -1,11 +1,11 @@
-from graphene import ObjectType, String, Schema, List, Field, Argument
+from graphene import ObjectType, String, Schema, List, Field, Argument, Mutation, Int
 
 
 class UserType(ObjectType):
     # fields from user_data (or from DB)
     first_name = String(description="User's first name")
     last_name = String(description="User's last name")
-    age = String(description="User's age")
+    age = Int(description="User's age")
     email = String(description="User's email address")
     address = String(description="User's address")
 
@@ -19,11 +19,11 @@ class UserType(ObjectType):
 
 # Dummy user data for illustration
 user_data = [
-    {"first_name": "John", "last_name": "Doe", "age": "30", "email": "john@example.com", "address": "123 Main St"},
-    {"first_name": "Alice", "last_name": "Smith", "age": "25", "email": "alice@example.com", "address": "456 Oak Ave"},
-    {"first_name": "Bob", "last_name": "Johnson", "age": "35", "email": "bob@example.com", "address": "789 Pine Rd"},
-    {"first_name": "Eve", "last_name": "Johnson", "age": "28", "email": "eve@example.com", "address": "101 Cedar Ln"},
-    {"first_name": "Charlie", "last_name": "Brown", "age": "40", "email": "charlie@example.com",
+    {"first_name": "John", "last_name": "Doe", "age": 30, "email": "john@example.com", "address": "123 Main St"},
+    {"first_name": "Alice", "last_name": "Smith", "age": 25, "email": "alice@example.com", "address": "456 Oak Ave"},
+    {"first_name": "Bob", "last_name": "Johnson", "age": 35, "email": "bob@example.com", "address": "789 Pine Rd"},
+    {"first_name": "Eve", "last_name": "Johnson", "age": 28, "email": "eve@example.com", "address": "101 Cedar Ln"},
+    {"first_name": "Charlie", "last_name": "Brown", "age": 40, "email": "charlie@example.com",
      "address": "222 Elm St"},
 ]
 
@@ -49,4 +49,29 @@ class Query(ObjectType):
         return None
 
 
-schema = Schema(query=Query)
+class AddUser(Mutation):
+    # input arguments
+    class Arguments:
+        first_name = String(description="User's first name")
+        last_name = String(description="User's last name")
+        age = String(description="User's age")
+        email = String(description="User's email address")
+        address = String(description="User's address")
+
+    # output arguments
+    user = Field(UserType)
+
+    def mutate(self, info, first_name, last_name, age, email, address):
+        # Add the new user to the user_data
+        new_user = {"first_name": first_name, "last_name": last_name, "age": age, "email": email, "address": address}
+        user_data.append(new_user)
+
+        # Return the new user
+        return AddUser(user=UserType(**new_user))
+
+
+class Mutation(ObjectType):
+    add_user = AddUser.Field(description="Add a new user")
+
+
+schema = Schema(query=Query, mutation=Mutation)

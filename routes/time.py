@@ -14,6 +14,7 @@ def get_current_time():
     summary="Get the current time",
     description="Returns the current date and time as a JSON response.",
     response_description="JSON response containing the current time.",
-    tags=["Time"])
+    tags=["Time"],
+)
 async def read_current_time(current_time: datetime = Depends(get_current_time)):
     return {"current_time": current_time}

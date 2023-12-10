@@ -2,11 +2,19 @@ from graphene import ObjectType, String, Schema, List
 
 
 class User(ObjectType):
+    # fields from user_data (or from DB)
     first_name = String(description="User's first name")
     last_name = String(description="User's last name")
     age = String(description="User's age")
     email = String(description="User's email address")
     address = String(description="User's address")
+
+    # custom field to be resolved
+    display_name = String(description="User's custom display name")
+
+    def resolve_display_name(self, info):
+        # Combine first_name and last_name for the display name
+        return f"{self.first_name} {self.last_name}"
 
 
 # Dummy user data for illustration
@@ -30,4 +38,3 @@ class Query(ObjectType):
 
 
 schema = Schema(query=Query)
-

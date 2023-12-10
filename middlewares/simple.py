@@ -8,14 +8,12 @@ from starlette.types import ASGIApp
 
 class SimpleMiddleware(BaseHTTPMiddleware):
     def __init__(
-            self,
-            app: ASGIApp,
+        self,
+        app: ASGIApp,
     ):
         super().__init__(app)
 
-    async def dispatch(
-            self, request: Request, call_next
-    ) -> Response:
+    async def dispatch(self, request: Request, call_next) -> Response:
         # Code to be executed before the request is processed
         print("Before processing the request")
 

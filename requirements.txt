@@ -1,6 +1,6 @@
 fastapi
 uvicorn
-starlette_graphene3
-graphql_explorer
+starlette-graphene3
+graphql-explorer
 pyinstrument
-fastapi_graphql
+graphene-federation

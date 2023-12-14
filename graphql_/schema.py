@@ -1,12 +1,15 @@
-from graphene import ObjectType, String, Schema, List, Field, Argument, Mutation, Int
+from graphene import ObjectType, String, List, Field, Argument, Mutation, Int
+
+from graphene_federation import key, build_schema
 
 
+@key("email")
 class UserType(ObjectType):
     # fields from user_data (or from DB)
     first_name = String(description="User's first name")
     last_name = String(description="User's last name")
     age = Int(description="User's age")
-    email = String(description="User's email address")
+    email = String(description="User's email address",required=True)
     address = String(description="User's address")
 
     # custom field to be resolved
@@ -74,4 +77,4 @@ class Mutation(ObjectType):
     add_user = AddUser.Field(description="Add a new user")
 
 
-schema = Schema(query=Query, mutation=Mutation)
+schema = build_schema(query=Query, mutation=Mutation, types=[UserType], enable_federation_2=True)
